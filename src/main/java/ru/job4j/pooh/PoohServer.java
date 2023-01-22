@@ -5,8 +5,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Map;
 
 public class PoohServer {
+
+    private final static Map<String, Service> SERVICE_DISPATCHER = Map.of(
+            "queue", new QueueService(),
+            "topic", new TopicService()
+    );
+
     public static void main(String[] args) throws IOException {
         try (ServerSocket server = new ServerSocket(9000)) {
             while (!server.isClosed()) {
@@ -16,9 +23,11 @@ public class PoohServer {
                     byte[] buff = new byte[1_000_000];
                     var total = input.read(buff);
                     var text = new String(Arrays.copyOfRange(buff, 0, total), StandardCharsets.UTF_8);
-                    System.out.println(text);
-                    out.write("HTTP/1.1 200 OK\r\n".getBytes());
-                    out.write(text.getBytes());
+                    var request = Req.of(text);
+                    var service = SERVICE_DISPATCHER.get(request.getPoohMode());
+                    var response = service.process(request);
+                    out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                    out.write(response.text().getBytes());
                 }
             }
         }
