@@ -11,11 +11,11 @@ public class TopicService implements Service {
         String requestType = req.httpRequestType();
         String name = req.getSourceName();
         String param = req.getParam();
-        if ("POST".equals(requestType)) {
+        if (HttpMethod.POST.toString().equals(requestType)) {
             topics.get(name).forEach((s, strings) -> strings.add(param));
             return new Resp(param, "200");
         }
-        if ("GET".equals(requestType)) {
+        if (HttpMethod.GET.toString().equals(requestType)) {
             topics.putIfAbsent(name, new ConcurrentHashMap<>());
             topics.get(name).putIfAbsent(param, new ConcurrentLinkedQueue<>());
             var text = topics.get(name).get(param).poll();

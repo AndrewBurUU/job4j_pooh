@@ -30,11 +30,11 @@ public class Req {
         String poohMode = slashString[1];
         String sourceName = slashString[2];
         String param = "";
-        if ("POST".equals(requestType)) {
+        if (HttpMethod.POST.toString().equals(requestType)) {
             param = contentLines[contentLines.length - 1];
         }
-        if ("GET".equals(requestType)
-                && "topic".equals(poohMode)
+        if (HttpMethod.GET.toString().equals(requestType)
+                && DispatcherMethod.topic.toString().equals(poohMode)
         ) {
             param = slashString[3];
         }

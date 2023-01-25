@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class PoohServer {
 
-    private final static Map<String, Service> SERVICE_DISPATCHER = Map.of(
-            "queue", new QueueService(),
-            "topic", new TopicService()
+    private final static Map<DispatcherMethod, Service> SERVICE_DISPATCHER = Map.of(
+            DispatcherMethod.queue, new QueueService(),
+            DispatcherMethod.topic, new TopicService()
     );
 
     public static void main(String[] args) throws IOException {
